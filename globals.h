@@ -2,6 +2,7 @@
 #define GLOBALS_H
 
 /* Imports */
+#include <algorithm>
 #include <cassert>
 #include <iostream>
 #include <vector>
@@ -13,9 +14,15 @@ using std::cin;
 using std::endl;
 using std::vector;
 
+/* Forward Declarations */
+class Individual;
+
 /* Typedefs */
-typedef int* Individual;
-typedef vector<Individual> Population;
+typedef int Gene;
+typedef int* Sequence;
+typedef Individual* IndividualPtr;
+typedef vector<IndividualPtr> Population;
+
 
 
 
