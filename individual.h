@@ -11,9 +11,8 @@ class Individual {
         Individual(const Individual & mother, const Individual & father);
         ~Individual();
 
-        bool operator< (const Individual & rhs) const;
         bool operator> (const Individual & rhs) const;
-        bool operator> (double rhs) const;
+        bool operator== (const Individual & rhs) const;
         int operator[] (int i) const;
 
         int queen_pairs() const;

@@ -4,8 +4,8 @@
 int Individual::N(-1);
 SetOnce<int> Individual::N_PAIRS(-1);
 
+/* Create an individual with a random strain */
 Individual::Individual() {
-
     sequence = new Gene[N];
     for (int i = 0; i < N; i++)
         sequence[i] = rand() % N;
@@ -15,6 +15,8 @@ Individual::Individual() {
     queen_pairs();
 }
 
+
+/* NOTE: this constructor may only be invoked once to set the static class variable N. */
 Individual::Individual(int _N, const Sequence & s) {
     int pair_count = 0;
 
@@ -25,7 +27,6 @@ Individual::Individual(int _N, const Sequence & s) {
     N_PAIRS = pair_count;
 
     sequence = new Gene[N];
-
     if (s)
         for (int i = 0; i < N; i++)
             sequence[i] = s[i];
@@ -38,6 +39,7 @@ Individual::Individual(int _N, const Sequence & s) {
     queen_pairs();
 }
 
+/* Form a child from two parents */
 Individual::Individual(const Individual & mother, const Individual & father) {
     int cutoff = rand() % N;
     bool order = rand() % 2;
@@ -49,16 +51,16 @@ Individual::Individual(const Individual & mother, const Individual & father) {
     if (cutoff == N - 1)
         cutoff--;
 
-        if (order) {
+    if (order) {
         for (int i = 0; i < cutoff; i++)
-            sequence[i] = mother.sequence[i];
+            sequence[i] = mother[i];
         for (int i = cutoff; i < N; i++)
-            sequence[i] = father.sequence[i];
+            sequence[i] = father[i];
     } else {
         for (int i = 0; i < cutoff; i++)
-            sequence[i] = father.sequence[i];
+            sequence[i] = father[i];
         for (int i = cutoff; i < N; i++)
-            sequence[i] = mother.sequence[i];
+            sequence[i] = mother[i];
     }
 
     m_NonAttackingPairs = -1;
@@ -66,30 +68,32 @@ Individual::Individual(const Individual & mother, const Individual & father) {
     queen_pairs();
 }
 
-bool Individual::operator< (const Individual & rhs) const {
-    int t = this->queen_pairs();
-    int r = rhs.queen_pairs();
-    return t < r;
+Individual::~Individual() {
+    if (sequence)
+        delete [] sequence;
 }
 
 bool Individual::operator> (const Individual & rhs) const {
-    int t = this->queen_pairs();
-    int r = rhs.queen_pairs();
-    return t > r;
+    return this->queen_pairs() > rhs.queen_pairs();;
 }
 
-bool Individual::operator> (double rhs) const {
-    return (this->fitness() > rhs);
+bool Individual::operator== (const Individual & rhs) const {
+    bool same = true;
+
+    for (int i = 0; i < N; i++)
+        if ((*this)[i] != rhs[i]) {
+            same = false;
+            break;
+        }
+
+    return same;
 }
 
 int Individual::operator[] (int i) const {
     if (i >= 0 && i < N)
         return sequence[i];
-}
 
-Individual::~Individual() {
-    if (sequence)
-        delete [] sequence;
+    return -1;
 }
 
 int Individual::queen_pairs() const {
@@ -124,10 +128,16 @@ double Individual::set_fitness(double sum, double start) {
 }
 
 void Individual::printer() const {
-    for (int i = 0; i < N; i++)
-        cout << sequence[i];
+    for (int r = 0; r < N; r++) {
+        for (int c = 0; c < N; c++)
+            if (sequence[r] == c)
+                cout << "Q ";
+            else
+                cout << "- ";
+        cout << endl;
+    }
 
-    cout << " (" << m_NonAttackingPairs << ")" << endl;
+
 }
 
 void Individual::mutate() {
