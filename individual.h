@@ -1,3 +1,8 @@
+/*
+Author:         Michael Schmidt
+Description:    Solve N Queens using a genetic algorithm
+*/
+
 #ifndef INDIVIDUAL_H
 #define INDIVIDUAL_H
 
@@ -27,7 +32,7 @@ class Individual {
         mutable double m_Fitness;
         Sequence sequence;
 
-        static int N;
+        static SetOnce<int> N;
         static SetOnce<int> N_PAIRS;
 };
 

@@ -1,3 +1,8 @@
+/*
+Author:         Michael Schmidt
+Description:    Solve N Queens using a genetic algorithm
+*/
+
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
@@ -5,12 +10,12 @@
 #include <algorithm>
 #include <cassert>
 #include <iostream>
+#include <mutex>
 #include <vector>
 
 /* Using Statements */
 using std::atoi;
 using std::cout;
-using std::cin;
 using std::endl;
 using std::vector;
 
@@ -19,14 +24,8 @@ class Individual;
 
 /* Typedefs */
 typedef int Gene;
-typedef int* Sequence;
+typedef Gene* Sequence;
 typedef Individual* IndividualPtr;
 typedef vector<IndividualPtr> Population;
-
-
-
-
-
-
 
 #endif // !GLOBALS_H

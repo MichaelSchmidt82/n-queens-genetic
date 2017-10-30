@@ -1,7 +1,6 @@
 /*
-
-
-
+Author:         Michael Schmidt
+Description:    Solve N Queens using a genetic algorithm
 */
 
 /* Imports */

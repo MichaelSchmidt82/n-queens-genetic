@@ -1,7 +1,12 @@
+/*
+Author:         Michael Schmidt
+Description:    Solve N Queens using a genetic algorithm
+*/
+
 #include "individual.h"
 #include "set_once.h"
 
-int Individual::N(-1);
+SetOnce<int> Individual::N(-1);
 SetOnce<int> Individual::N_PAIRS(-1);
 
 /* Create an individual with a random strain */
@@ -136,8 +141,6 @@ void Individual::printer() const {
                 cout << "- ";
         cout << endl;
     }
-
-
 }
 
 void Individual::mutate() {
