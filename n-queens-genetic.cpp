@@ -89,14 +89,19 @@ void inbreed_check (Population & population, Population & next_gen, const int PO
     bool inbreed = (*population[0] == *population[POP_SIZE - 1]);
     /* Checks to see if the population has become a master race */
 
-    for (IndividualPtr i : population)
-        delete i;
-    population.clear();
+    cout << "best: " << population[0]->queen_pairs() << " worst: " << population[POP_SIZE - 1]->queen_pairs();
 
-    if (inbreed)
+    if (inbreed) {
+        cout << " indreed";
+        for (IndividualPtr i : population)
+            delete i;
+        population.clear();
         init_population(population, POP_SIZE);
+    }
     else
         population = next_gen;
+
+    cout << endl;
 
     next_gen.clear();
 }
