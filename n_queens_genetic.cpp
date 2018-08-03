@@ -32,7 +32,7 @@ int main (int argc, char * argv[]) {
     Population next_gen;
 
 
-    // Total uniquely paired queens possible.
+    // Total non-paired combonations possible.
     for (int n = 0; n < N; n++)
         pairs += n;
     cout << "Target: " << setw(8) << pairs << endl;
