@@ -7,16 +7,19 @@ Description:    Solve N Queens using a genetic algorithm
 #define GLOBALS_H
 
 /* Imports */
-#include <algorithm>
+//#include <algorithm>
 #include <cassert>
 #include <iostream>
 #include <mutex>
 #include <vector>
+#include <iomanip>
 
 /* Using Statements */
 using std::atoi;
 using std::cout;
 using std::endl;
+using std::setw;
+using std::setprecision;
 using std::vector;
 
 /* Forward Declarations */

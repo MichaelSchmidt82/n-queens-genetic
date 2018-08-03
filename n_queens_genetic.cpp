@@ -11,37 +11,48 @@ Description:    Solve N Queens using a genetic algorithm
 /* Prototypes */
 void init_population(Population & population, const int POP_SIZE, const int N = -1);
 void next_population(Population & population, Population & next_gen, const int POP_SIZE);
-void fitness_function(Population & population);
+void fitness(Population & population);
 void inbreed_check (Population & population, Population & next_gen, const int POP_SIZE);
 double fRand (double fMin = 0.0, double fMax = 1.0);
 IndividualPtr reproduce (const Population & population);
 
 /* int main */
 int main (int argc, char * argv[]) {
-    assert(argc == 4 && "Provide Population size, Seed, and N as command ling args.");
+
+    /* init */
+    assert(argc == 4 && "Insufficient arguments provided: POPULATION_SIZE, SEED, and N needed.");
     srand(atoi(argv[2]));
 
     /* Constants */
-    const int POP_SIZE = atoi(argv[1]);
-    const int N = atoi(argv[3]);
+    const int POP_SIZE = atoi(argv[1]);             // Population size
+    const int N = atoi(argv[3]);                    // Board size
 
-    Population curr_generaiton;
-    Population next_generation;
+    int pairs = 0; 
+    Population curr_gen;
+    Population next_gen;
 
-    init_population(curr_generaiton, POP_SIZE, N);
-    std::sort(curr_generaiton.begin(), curr_generaiton.end(), IndividualPtrCompare());
 
-    while (!curr_generaiton[0]->solution()) {
+    // Total uniquely paired queens possible.
+    for (int n = 0; n < N; n++)
+        pairs += n;
+    cout << "Target: " << setw(8) << pairs << endl;
+
+    init_population(curr_gen, POP_SIZE, N);
+    std::sort(curr_gen.begin(), curr_gen.end(), IndividualPtrCompare());
+
+    while (!curr_gen[0]->solution()) {
         /* Examine and calculate fitness of current generation */
-        fitness_function(curr_generaiton);
+        fitness(curr_gen);
 
         /* Create & Calculate the fitness of the next generation */
-        next_population(curr_generaiton, next_generation, POP_SIZE);
-        fitness_function(next_generation);
-        inbreed_check(curr_generaiton, next_generation, POP_SIZE);
+        next_population(curr_gen, next_gen, POP_SIZE);
+        fitness(next_gen);
+        inbreed_check(curr_gen, next_gen, POP_SIZE);
     }
+    cout << '\r' << endl << endl;
+    cout << "Solution found:" << endl;
 
-    curr_generaiton[0]->printer();
+    curr_gen[0]->printer();
     return 0;
 }
 
@@ -74,7 +85,7 @@ void next_population (Population & population, Population & next_gen, const int 
     }
 }
 
-void fitness_function(Population & population) {
+void fitness(Population & population) {
     double start = 1.0;
     int sum = 0;
 
@@ -85,25 +96,28 @@ void fitness_function(Population & population) {
         start = i->set_fitness(sum, start);
 }
 
-void inbreed_check (Population & population, Population & next_gen, const int POP_SIZE) {
-    bool inbreed = (*population[0] == *population[POP_SIZE - 1]);
-    /* Checks to see if the population has become a master race */
+void inbreed_check (Population & curr_gen, Population & next_gen, const int POP_SIZE) {
+    
+    static int count = 0;
+    bool inbreed = *curr_gen[0] == *curr_gen[POP_SIZE - 1];
 
-    cout << "best: " << population[0]->queen_pairs() << " worst: " << population[POP_SIZE - 1]->queen_pairs();
+    if (count == 15) {
+        cout << "Best: " << setw(10) << curr_gen[0]->queen_pairs() << ' ';
+        count = 0;
+    }
 
     if (inbreed) {
-        cout << " indreed";
-        for (IndividualPtr i : population)
+        for (IndividualPtr i : curr_gen)
             delete i;
-        population.clear();
-        init_population(population, POP_SIZE);
+        curr_gen.clear();
+        init_population(curr_gen, POP_SIZE);
     }
-    else
-        population = next_gen;
-
-    cout << endl;
-
+    else 
+        curr_gen = next_gen;
     next_gen.clear();
+
+    cout << "\t\r";
+    count++;
 }
 
 IndividualPtr reproduce (const Population & population) {
