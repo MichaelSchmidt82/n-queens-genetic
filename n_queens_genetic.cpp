@@ -34,6 +34,7 @@ int main (int argc, char * argv[]) {
     init_population(curr_gen, POP_SIZE, N);
     std::sort(curr_gen.begin(), curr_gen.end(), IndividualPtrCompare());
 
+    cout << "Target: " << setw(8) << pairs << endl;
     while (!curr_gen[0]->solution()) {
         /* Examine and calculate fitness of current generation */
         fitness(curr_gen);
