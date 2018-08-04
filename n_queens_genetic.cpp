@@ -24,18 +24,12 @@ int main (int argc, char * argv[]) {
     srand(atoi(argv[2]));
 
     /* Constants */
-    const int POP_SIZE = atoi(argv[1]);             // Population size
-    const int N = atoi(argv[3]);                    // Board size
+    const int POP_SIZE = atoi(argv[1]);                       // Population size
+    const int N = atoi(argv[3]);                                   // Board size
 
-    int pairs = 0; 
+    int pairs = (N * (N-1)) / 2;      // Total non-paired combonations possible.
     Population curr_gen;
     Population next_gen;
-
-
-    // Total non-paired combonations possible.
-    for (int n = 0; n < N; n++)
-        pairs += n;
-    cout << "Target: " << setw(8) << pairs << endl;
 
     init_population(curr_gen, POP_SIZE, N);
     std::sort(curr_gen.begin(), curr_gen.end(), IndividualPtrCompare());
@@ -97,7 +91,7 @@ void fitness(Population & population) {
 }
 
 void inbreed_check (Population & curr_gen, Population & next_gen, const int POP_SIZE) {
-    
+
     static int count = 0;
     bool inbreed = *curr_gen[0] == *curr_gen[POP_SIZE - 1];
 
@@ -112,7 +106,7 @@ void inbreed_check (Population & curr_gen, Population & next_gen, const int POP_
         curr_gen.clear();
         init_population(curr_gen, POP_SIZE);
     }
-    else 
+    else
         curr_gen = next_gen;
     next_gen.clear();
 
